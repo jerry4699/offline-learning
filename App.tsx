@@ -4,7 +4,7 @@ import {
   RefreshCw, Sparkles, ArrowRight, Award, Users, Shield, 
   Wifi, WifiOff, Zap, Star, LayoutDashboard, Globe, MessageCircle, PlayCircle, PlusCircle, Grid, RotateCcw,
   BarChart, Settings, Heart, LogOut, Flame, TrendingUp, Loader2, Timer, Eye, BrainCircuit, Lightbulb, ChevronDown, FileText, Upload, Trash2, Activity,
-  Smartphone, UserCircle2, GraduationCap, Briefcase, Pencil, Brain, LogIn, UserPlus, Search, AlertCircle
+  Smartphone, UserCircle2, GraduationCap, Briefcase, Pencil, Brain, LogIn, UserPlus, Search, AlertCircle, Medal
 } from 'lucide-react';
 import { MODULES, INITIAL_XP, XP_PER_LEVEL, GAMES, VOCAB_MATCH_DATA, VOCAB_RECALL_SEQUENCES, STROOP_COLORS, TRANSLATIONS, POEMS } from './constants';
 import { AppState, UserProgress, Module, QuizSession, Role, Language, Question, Poem, AuthMethod, Difficulty } from './types';
@@ -262,7 +262,6 @@ const App: React.FC = () => {
       setAuthError("Internet required for Google Login. Please connect and try again.");
       return;
     }
-    // Simulation of Google OAuth
     setAuthMethod('google');
     setAuthError("");
     setView('role-selection');
@@ -443,10 +442,21 @@ const App: React.FC = () => {
     } else {
       if (currentUser) {
         const xpGain = activeModule.xpReward + quizSession.score;
+        const maxPossibleScore = quizSession.filteredQuestions.length * 10;
+        const isPerfect = quizSession.score === maxPossibleScore;
+        
+        let newBadges = [...currentUser.badges];
+        if (isPerfect && !newBadges.includes('Quiz Master')) {
+          newBadges.push('Quiz Master');
+          setEncouragement("Achievement Unlocked: Quiz Master! 🏆");
+        }
+
         setCurrentUser({
-          ...currentUser, xp: currentUser.xp + xpGain,
+          ...currentUser, 
+          xp: currentUser.xp + xpGain,
           completedModules: [...new Set([...currentUser.completedModules, activeModule.id])],
-          moduleScores: { ...currentUser.moduleScores, [activeModule.id]: quizSession.score }
+          moduleScores: { ...currentUser.moduleScores, [activeModule.id]: quizSession.score },
+          badges: newBadges
         });
       }
       setView('results');
@@ -828,6 +838,22 @@ const App: React.FC = () => {
         </header>
         <main className="p-6 space-y-8 flex-1 overflow-y-auto">
           {encouragement && <div className="bg-green-600 text-white p-4 rounded-[20px] border-4 border-black text-center font-black animate-bounce shadow-[4px_4px_0_0_#000]"> {encouragement} </div>}
+          
+          {/* Badge Display */}
+          {currentUser && currentUser.badges.length > 0 && (
+            <section className="bg-white p-5 chunky-card rounded-[28px]">
+              <h3 className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-3">Earned Badges</h3>
+              <div className="flex flex-wrap gap-3">
+                {currentUser.badges.map(badge => (
+                  <div key={badge} className={`px-3 py-1.5 ${badge === 'Quiz Master' ? 'bg-amber-100 border-amber-600' : 'bg-blue-50 border-black'} border-2 rounded-xl flex items-center gap-2 shadow-[2px_2px_0_0_#1e293b]`}>
+                    <Medal className={`w-4 h-4 ${badge === 'Quiz Master' ? 'text-amber-600' : 'text-blue-600'}`} />
+                    <span className={`text-[10px] font-black uppercase ${badge === 'Quiz Master' ? 'text-amber-900' : 'text-blue-900'}`}>{badge}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {!isGuest && (
             <section className="bg-white p-5 chunky-card rounded-[28px]">
               <div className="flex items-center justify-between mb-3"><h2 className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{t('masteryPath')}</h2><span className="text-[9px] font-black text-blue-600 uppercase">{t('level')} {currentLevelVal} PROGRESS</span></div>
@@ -1111,6 +1137,9 @@ const App: React.FC = () => {
 
   const renderResults = () => {
     if (!quizSession) return null;
+    const maxPossibleScore = quizSession.filteredQuestions.length * 10;
+    const isPerfect = quizSession.score === maxPossibleScore;
+
     return (
       <ViewWrapper id="results" className="items-center h-full bg-slate-50">
         <header className="p-6 border-b-4 border-black flex items-center bg-white sticky top-0 z-50 w-full">
@@ -1121,8 +1150,18 @@ const App: React.FC = () => {
           <div className="w-24 h-24 bg-blue-600 rounded-[32px] border-4 border-black flex items-center justify-center shadow-[6px_6px_0_0_#000] mb-8 animate-bounce">
             <Award className="w-12 h-12 text-white" />
           </div>
-          <h2 className="text-4xl font-black text-slate-900 italic tracking-tighter mb-10">{t('results')}</h2>
+          <h2 className="text-4xl font-black text-slate-900 italic tracking-tighter mb-4">{t('results')}</h2>
           
+          {isPerfect && (
+            <div className="mb-6 px-6 py-3 bg-amber-100 border-4 border-amber-600 rounded-[24px] font-black text-xs uppercase text-amber-900 flex items-center gap-3 animate-in zoom-in duration-500 shadow-[4px_4px_0_0_#d97706]">
+              <Medal className="w-6 h-6 text-amber-600" />
+              <div className="flex flex-col">
+                <span>Achievement Unlocked</span>
+                <span className="text-lg leading-none">Quiz Master 🏆</span>
+              </div>
+            </div>
+          )}
+
           <div className="bg-white p-8 rounded-[40px] border-4 border-black w-full space-y-6 shadow-[8px_8px_0_0_#1e293b] mb-10 text-center">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('score')}</p>
             <h4 className="text-6xl font-black text-blue-600">{quizSession.score}</h4>
@@ -1187,7 +1226,7 @@ const App: React.FC = () => {
         </header>
         <main className="flex-1 flex flex-col items-center justify-center p-8">
           <div className="mb-10 text-center"><h2 className="text-3xl font-black mb-2">{t('matchTitle')}</h2><p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">{t('pickMeaning')}</p></div>
-          <div className="bg-white p-12 rounded-[48px] border-4 border-black shadow-[10px_10px_0_0_#000] mb-10 w-full text-center">
+          <div className="bg-white p-12 rounded-[48px] border-4 border-black shadow-[10px_10px_0_0_#101010] mb-10 w-full text-center">
             <h3 className="text-5xl font-black text-blue-600">{current.word}</h3>
           </div>
           <div className="space-y-4 w-full">
@@ -1316,7 +1355,7 @@ const App: React.FC = () => {
       </header>
       <main className="flex-1 flex flex-col items-center justify-center p-8">
         <div className="mb-10 text-center"><h2 className="text-3xl font-black mb-2">Pattern Find</h2><p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Tap the odd one out!</p></div>
-        <div className="grid grid-cols-3 gap-4 bg-white p-6 rounded-[40px] border-4 border-black shadow-[10px_10px_0_0_#000]">
+        <div className="grid grid-cols-3 gap-4 bg-white p-6 rounded-[40px] border-4 border-black shadow-[10px_10px_0_0_#101010]">
           {matrixGrid.map(cell => (
             <button key={cell.id} onClick={() => handleMatrixClick(cell.id)} className="w-20 h-20 rounded-2xl border-4 border-black shadow-[4px_4px_0_0_#000] active:translate-y-1 active:shadow-none transition-all" style={{ backgroundColor: cell.color }} />
           ))}
