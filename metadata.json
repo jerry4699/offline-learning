@@ -1,0 +1,7 @@
+{
+  "name": "Offline-First Gamified Learning",
+  "description": "A mobile-first, offline-ready educational platform designed for students in low-connectivity areas. Features include modular lessons, interactive quizzes with instant feedback, gamified XP tracking, and offline sync via QR codes.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
