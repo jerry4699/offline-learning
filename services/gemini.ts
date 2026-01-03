@@ -1,11 +1,12 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 
-// Always use process.env.API_KEY directly as per guidelines
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
+// Use gemini-3-flash-preview for simple text tasks and Q&A explanations.
 export const getTutorExplanation = async (topic: string, question: string, selectedAnswer: string, isCorrect: boolean) => {
   try {
+    // Create instance inside the function to ensure we always use the latest process.env.API_KEY
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `You are a friendly teacher for a rural student. 
@@ -15,11 +16,11 @@ export const getTutorExplanation = async (topic: string, question: string, selec
       This answer was ${isCorrect ? 'Correct' : 'Incorrect'}.
       Explain why in one or two simple sentences using helpful analogies.`,
       config: {
-        maxOutputTokens: 150,
+        // Removed maxOutputTokens to follow guidelines recommending to avoid setting it if not required.
         temperature: 0.7,
       }
     });
-    // Accessing .text property directly as per instructions
+    
     return response.text;
   } catch (error) {
     console.error("Gemini Error:", error);
@@ -27,8 +28,11 @@ export const getTutorExplanation = async (topic: string, question: string, selec
   }
 };
 
+// Use gemini-3-flash-preview for multimodal tasks like transcription.
 export const transcribeVoiceAnswer = async (audioBase64: string) => {
   try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: {
@@ -38,8 +42,8 @@ export const transcribeVoiceAnswer = async (audioBase64: string) => {
         ]
       }
     });
-    // Accessing .text property directly and handling potential undefined
-    return response.text?.trim();
+    
+    return response.text?.trim() || null;
   } catch (error) {
     console.error("Transcription Error:", error);
     return null;
