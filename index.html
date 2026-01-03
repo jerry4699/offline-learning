@@ -6,35 +6,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RuralLearn - My Learning Path</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #fdfdfd;
+      --text: #1e293b;
+      --card-bg: #ffffff;
+      --accent: #f59e0b;
+    }
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8fafc;
-      color: #1e293b;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      /* Notebook Grid Background */
+      background-image: 
+        linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+        linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
+      background-size: 32px 32px;
+      color: var(--text);
       -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
     }
-    .flash-correct {
-      animation: flash-green 1s ease-in-out;
+    .chunky-card {
+      background: var(--card-bg);
+      border: 3px solid #1e293b;
+      box-shadow: 6px 6px 0 0 #1e293b;
+      transition: all 0.1s ease-out;
     }
-    .flash-incorrect {
-      animation: flash-red 1s ease-in-out;
+    .chunky-card:active {
+      transform: translate(3px, 3px);
+      box-shadow: 2px 2px 0 0 #1e293b;
     }
-    @keyframes flash-green {
-      0%, 100% { background-color: #2563eb; }
-      50% { background-color: #22c55e; }
+    .chunky-button-primary {
+      background: #2563eb;
+      color: white;
+      border: 3px solid #1e293b;
+      box-shadow: 6px 6px 0 0 #1e293b;
+      transition: all 0.1s;
     }
-    @keyframes flash-red {
-      0%, 100% { background-color: #2563eb; }
-      50% { background-color: #ef4444; }
+    .chunky-button-primary:active {
+      transform: translate(3px, 3px);
+      box-shadow: 2px 2px 0 0 #1e293b;
     }
-    .sticky-bottom {
-      position: sticky;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 50;
+    .chunky-button-success {
+      background: #10b981;
+      color: white;
+      border: 3px solid #1e293b;
+      box-shadow: 4px 4px 0 0 #1e293b;
     }
+    .chunky-button-secondary {
+      background: #ffffff;
+      color: #1e293b;
+      border: 3px solid #1e293b;
+      box-shadow: 4px 4px 0 0 #1e293b;
+    }
+    .glass-header {
+      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.9);
+      border-bottom: 3px solid #1e293b;
+    }
+    @keyframes bounce-subtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-bounce-subtle {
+      animation: bounce-subtle 2s infinite ease-in-out;
+    }
+    .progress-bar-container {
+      height: 20px;
+      background: #f1f5f9;
+      border: 3px solid #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+      padding: 2px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #2563eb;
+      border-radius: 999px;
+      transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    /* Hide scrollbar but keep functionality */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .fade-enter { opacity: 0; transform: translateY(10px); }
+    .fade-enter-active { opacity: 1; transform: translateY(0); transition: all 0.3s ease; }
   </style>
 <script type="importmap">
 {

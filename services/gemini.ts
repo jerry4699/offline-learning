@@ -1,7 +1,8 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Always use process.env.API_KEY directly as per guidelines
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getTutorExplanation = async (topic: string, question: string, selectedAnswer: string, isCorrect: boolean) => {
   try {
@@ -18,6 +19,7 @@ export const getTutorExplanation = async (topic: string, question: string, selec
         temperature: 0.7,
       }
     });
+    // Accessing .text property directly as per instructions
     return response.text;
   } catch (error) {
     console.error("Gemini Error:", error);
@@ -36,6 +38,7 @@ export const transcribeVoiceAnswer = async (audioBase64: string) => {
         ]
       }
     });
+    // Accessing .text property directly and handling potential undefined
     return response.text?.trim();
   } catch (error) {
     console.error("Transcription Error:", error);
