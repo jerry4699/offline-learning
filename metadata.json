@@ -1,7 +1,9 @@
 {
-  "name": "Offline-First Gamified Learning",
-  "description": "A mobile-first, offline-ready educational platform designed for students in low-connectivity areas. Features include modular lessons, interactive quizzes with instant feedback, gamified XP tracking, and offline sync via QR codes.",
+  "name": "StudyBuddy - AI Learning Companion",
+  "description": "A modern, offline-friendly gamified learning platform with AI-powered quiz generation, creative media tools, and real-time tutoring.",
   "requestFramePermissions": [
-    "microphone"
+    "camera",
+    "microphone",
+    "geolocation"
   ]
 }
