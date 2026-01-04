@@ -1,76 +1,80 @@
 
-export type AppState = 'auth' | 'role-selection' | 'dashboard' | 'teacher-dashboard' | 'teacher-assign' | 'teacher-analytics' | 'notes-hub' | 'ai-chat' | 'arcade' | 'study' | 'quiz' | 'results' | 'difficulty-selection';
-export type Role = 'student' | 'teacher' | 'alumni' | 'guest';
-export type AuthMethod = 'google' | 'mobile' | 'guest';
+export type AppState = 'auth' | 'dashboard' | 'teacher-dashboard' | 'teacher-assign' | 'teacher-analytics' | 'notes-hub' | 'ai-chat' | 'arcade' | 'study' | 'quiz' | 'results' | 'settings' | 'leaderboard';
+export type Role = 'student' | 'teacher' | 'parent';
 export type Difficulty = 'easy' | 'standard' | 'expert';
 export type Language = 'english' | 'marathi' | 'hindi';
+export type Grade = '6' | '7' | '8' | '9' | '10';
 
 export interface StudentStats {
   id: string;
   name: string;
-  level: number;
+  grade: Grade;
   xp: number;
-  progress: number; // 0 to 100
+  completedModules: string[];
   lastActive: string;
-}
-
-export interface Poem {
-  id: string;
-  title: string;
-  titleTranslated: Record<Language, string>;
-  lines: string[];
-  linesTranslated: Record<Language, string[]>;
-  duration: number;
 }
 
 export interface Question {
   id: string;
   text: string;
-  textTranslated?: Record<Language, string>;
   options: string[];
-  optionsTranslated?: Record<Language, string[]>;
   correctAnswerIndex: number;
   difficulty: Difficulty;
+  topic: string;
+}
+
+export interface Assignment {
+  id: string;
+  title: string;
+  topic: string;
+  dueDate: string;
+  xpReward: number;
+  questions: Question[];
+  submissions: number;
+}
+
+export interface DailyQuest {
+  id: string;
+  text: string;
+  target: number;
+  current: number;
+  reward: number;
+  completed: boolean;
 }
 
 export interface Module {
   id: string;
   title: string;
-  titleTranslated: Record<Language, string>;
-  subtitle: string;
+  grade: Grade;
   subject: string;
+  subtitle: string;
   content: string[];
-  contentTranslated: Record<Language, string[]>;
   questions: Question[];
   xpReward: number;
-  basicContent?: string[];
 }
 
 export interface UserProgress {
   username: string;
   role: Role;
+  grade: Grade;
   xp: number;
   level: number;
   completedModules: string[];
   downloadedModules: string[];
-  customQuizzes: { id: string, title: string, questions: Question[] }[];
   language: Language;
   badges: string[];
   streak: number;
-  // New academic coordinates
-  college: string;
-  department: string;
-  classSection: string;
+  isLiteMode: boolean;
+  isHighContrast: boolean;
+  isReadAloud: boolean;
 }
 
 export interface QuizSession {
   moduleId: string;
   currentQuestionIndex: number;
   score: number;
-  answers: number[];
   mode: Difficulty;
   filteredQuestions: Question[];
-  isCustom?: boolean;
 }
 
 export interface GroundingSource {

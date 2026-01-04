@@ -1,9 +1,7 @@
 {
-  "name": "StudyBuddy - AI Learning Companion",
-  "description": "A modern, offline-friendly gamified learning platform with AI-powered quiz generation, creative media tools, and real-time tutoring.",
+  "name": "StudyBuddy Rural - AI NCERT Mentor",
+  "description": "An offline-first, shared-device gamified learning mentor for rural school students covering NCERT Grade 6-10 curriculum.",
   "requestFramePermissions": [
-    "camera",
-    "microphone",
-    "geolocation"
+    "microphone"
   ]
 }
