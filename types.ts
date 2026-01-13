@@ -53,6 +53,21 @@ export interface Module {
   xpReward: number;
 }
 
+export interface UploadedDoc {
+  id: string;
+  title: string;
+  type: 'PDF' | 'PPT' | 'TXT';
+  timestamp: number;
+  isAnalyzed: boolean;
+}
+
+export interface CustomQuiz {
+  id: string;
+  title: string;
+  sourceDocId: string;
+  questions: Question[];
+}
+
 export interface UserProgress {
   username: string;
   role: Role;
@@ -75,6 +90,7 @@ export interface QuizSession {
   score: number;
   mode: Difficulty;
   filteredQuestions: Question[];
+  isCustom?: boolean;
 }
 
 export interface GroundingSource {
